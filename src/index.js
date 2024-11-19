@@ -3,7 +3,6 @@ import productsRouter from './routes/products.router.js';
 import cartsRouter from './routes/carts.router.js';
 const app = express();
 
-//Preparar la configuracion del servidor para recibir objetos JSON.
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

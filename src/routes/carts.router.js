@@ -44,11 +44,11 @@ router.get('/:cid', async (req, res) => {
 //agregar id y cantidad del producto al carrito
 router.post('/:cid/product/:pid', async (req, res) => {
     try {
-        const { cid, pid } = req.params; // Obtiene los parámetros cid y pid
+        const { cid, pid } = req.params; 
         const updatedCart = await cartManager.addProductToCart(Number(cid), Number(pid)); // Actualiza el carrito
-        res.status(200).json(updatedCart); // Devuelve el carrito actualizado
+        res.status(200).json(updatedCart); 
     } catch (error) {
-        res.status(404).json({ error: error.message }); // Maneja errores
+        res.status(404).json({ error: error.message }); 
     }
 });
 
