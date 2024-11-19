@@ -1,0 +1,22 @@
+[
+  {
+    "id": 2,
+    "title": "camisa Deportiva",
+    "description": "camisa de manga corta hecha con material transpirable.",
+    "code": "PAMIS01",
+    "price": 29.99,
+    "stock": 150,
+    "category": "Ropa Deportiva",
+    "status": true
+  },
+  {
+    "id": 3,
+    "title": "pantalon",
+    "description": "pantalon de manga corta hecha con material transpirable.",
+    "code": "PAMIS01",
+    "price": 30.99,
+    "stock": 200,
+    "category": "Ropa Deportiva",
+    "status": true
+  }
+]
