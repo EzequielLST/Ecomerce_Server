@@ -26,44 +26,43 @@ export default class CartManager {
     }
 
     //crear carrito
-    async addCart(cart){
+    async addCart() {
         const newCart = {
-            userId: this.cart.length ? this.cart [this.cart.length -1].id +1 : 1,
-            products: this.products.map(product => ({
-                id: product.id,
-                quantity: product.quantity || 1,
-            }))
+            id: this.cart.length ? this.cart[this.cart.length - 1].id + 1 : 1, // Generar un ID único.
+            products: [] // Inicializar con un array vacío.
         };
         this.cart.push(newCart);
-        this.saveToFile()
-        return newCart
+        await this.saveToFile();
+        return newCart;
     }
+    
 
     //list carrito por ID
     async getCartById(id) {
-        return this.cart.find(cart => cart.userId === userId);
+        return this.cart.find(cart => cart.id === id); // Corregido el uso del campo.
     }
 
     
     
     //agregar id y cantidad del producto al carrito
-async addProductToCart(userId, productId) {
-    const cart = this.cart.find(cart => cart.userId === userId);
-
-    if (!cart) {
-        throw new Error(`El carrito con ID ${userId} no existe`);
+    async addProductToCart(cid, pid) {
+        const cart = this.cart.find(cart => cart.id === cid);
+    
+        if (!cart) {
+            throw new Error(`El carrito con ID ${cid} no existe`);
+        }
+    
+        const productInCart = cart.products.find(product => product.id === pid);
+    
+        if (productInCart) {
+            productInCart.quantity += 1; // Incrementar cantidad si ya existe.
+        } else {
+            cart.products.push({ id: pid, quantity: 1 }); // Agregar nuevo producto si no existe.
+        }
+    
+        await this.saveToFile(); 
+        return cart;
     }
-
-    const productInCart = cart.products.find(product => product.id === productId);
-
-    if (productInCart) {
-        productInCart.quantity += 1; 
-        cart.products.push({ id: productId, quantity: 1 }); 
-    }
-
-    await this.saveToFile(); 
-    return cart;
-}
 
 
 }

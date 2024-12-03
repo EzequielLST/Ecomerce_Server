@@ -1,0 +1,51 @@
+<h1>Productos en Tiempo Real</h1>
+<ul id="productList"></ul>
+
+<!-- Formulario para agregar un nuevo producto -->
+<form id="productForm">
+    <input type="text" id="title" placeholder="Título" required />
+    <input type="text" id="description" placeholder="Descripción" required />
+    <input type="number" id="price" placeholder="Precio" required />
+    <button type="submit">Agregar Producto</button>
+</form>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+
+    const productList = document.getElementById('productList');
+    const productForm = document.getElementById('productForm');
+
+    // Actualizar lista de productos
+    socket.on('updateProducts', (products) => {
+        productList.innerHTML = products.map(product => `
+            <li>
+                <strong>${product.title}</strong> - ${product.description} - $${product.price}
+                <button onclick="deleteProduct(${product.id})">Eliminar</button>
+            </li>
+        `).join('');
+    });
+
+    // Manejar el envío del formulario para agregar un nuevo producto
+    productForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const title = document.getElementById('title').value;
+        const description = document.getElementById('description').value;
+        const price = parseFloat(document.getElementById('price').value);
+
+        if (!title || !description || isNaN(price)) {
+            alert('Por favor, completa todos los campos correctamente.');
+            return;
+        }
+
+        const product = { id: Date.now(), title, description, price };
+        socket.emit('newProduct', product); // Enviar producto al servidor
+
+        productForm.reset(); // Limpiar formulario
+    });
+
+    // Función para eliminar un producto
+    function deleteProduct(id) {
+        socket.emit('deleteProduct', id);
+    }
+</script>
