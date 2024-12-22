@@ -24,8 +24,13 @@ export default class ProductManager {
     // ** METODOS **
     // saveToFile
     async saveToFile() {
-        const jsonData = JSON.stringify(this.products, null, 2);
-        await fs.writeFile(productosFilePath, jsonData);
+        try {
+            await fs.mkdir(path.dirname(productosFilePath), { recursive: true }); // Crea la carpeta si no existe
+            const jsonData = JSON.stringify(this.products, null, 2);
+            await fs.writeFile(productosFilePath, jsonData);
+        } catch (error) {
+            console.error("Error al guardar el archivo:", error);
+        }
     }
 
     // getAllProducts

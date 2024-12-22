@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import ProductManager from '../services/ProductManager.js';
-
+import Product from '../services/ProductModel.js';
 
 
 const router = Router();
@@ -12,35 +12,60 @@ const productManager = new ProductManager()
 // Todas las APIs
 // Listar
 router.get('/', async (req, res) => {
+    const { page = 1, limit = 10, sort = '', query = '' } = req.query;
+
+    // Configurar parámetros de paginación y búsqueda
+    const queryObj = query ? { category: query } : {};
+    const sortObj = sort === 'asc' ? { price: 1 } : sort === 'desc' ? { price: -1 } : {};
+
     try {
-        const limit = req.query.limit ? parseInt(req.query.limit) : undefined
-        const products = await productManager.getAllProducts(limit)
-        res.json(products)
+        const products = await productManager.getPaginatedProducts(
+            page,
+            limit,
+            queryObj,
+            sortObj
+        );
+
+        // Enviar a la vista con la información de la paginación
+        res.render('index', {
+            title: 'Productos',
+            products: products.docs,
+            totalPages: products.totalPages,
+            prevPage: products.prevPage,
+            nextPage: products.nextPage,
+            page: products.page,
+            hasPrevPage: products.hasPrevPage,
+            hasNextPage: products.hasNextPage,
+            limit,
+            cartId: req.session.cartId // Asumiendo que tienes el carrito en la sesión
+        });
     } catch (error) {
         console.log(error);
+        res.status(500).send('Error al obtener productos');
     }
 });
 
-// Obtener un producto por id
 router.get('/:pid', async (req, res) => {
     try {
-        const productId = parseInt(req.params.pid);
+        const productId = req.params.pid;
         const product = await productManager.getProductById(productId);
 
         if (!product) {
             return res.status(404).send('Producto no encontrado');
         }
 
-        res.json(product)
+        res.render('productDetail', { title: product.title, product });
     } catch (error) {
         console.log(error);
-
+        res.status(500).send('Error al obtener el producto');
     }
-})
+});
+
 
 // Crear un producto
 router.post('/', async (req, res) => {
     try {
+        console.log(req.body)
         const { title, description, code, price, stock, category, thumbnails } = req.body
         if (!title || !description || !code || !price || !stock || !category) {
             return res.status(400).json({ error: 'Todos los campos son obligatorios excepto thumbnails' });

@@ -1,0 +1,54 @@
+[
+  {
+    "id": 1,
+    "title": "Monitor 4K",
+    "description": "Monitor de alta resolución 4K UHD",
+    "code": "MON006",
+    "price": 300,
+    "stock": 20,
+    "category": "Pantallas",
+    "thumbnails": [
+      "https://example.com/monitor.jpg"
+    ],
+    "status": true
+  },
+  {
+    "id": 2,
+    "title": "Drone Profesional",
+    "description": "Drone con cámara 4K y estabilización avanzada",
+    "code": "DRN010",
+    "price": 800,
+    "stock": 8,
+    "category": "Drones",
+    "thumbnails": [
+      "https://example.com/drone.jpg"
+    ],
+    "status": true
+  },
+  {
+    "id": 3,
+    "title": "Consola de Videojuegos",
+    "description": "Consola de última generación con gráficos 4K",
+    "code": "CON009",
+    "price": 600,
+    "stock": 12,
+    "category": "Videojuegos",
+    "thumbnails": [
+      "https://example.com/consola.jpg"
+    ],
+    "status": true
+  },
+  {
+    "id": 4,
+    "title": "Cámara de Seguridad",
+    "description": "Cámara de vigilancia WiFi con visión nocturna",
+    "code": "CAM008",
+    "price": 120,
+    "stock": 40,
+    "category": "Seguridad",
+    "thumbnails": [
+      "https://example.com/camara_seguridad.jpg"
+    ],
+    "status": true
+  }
+]
