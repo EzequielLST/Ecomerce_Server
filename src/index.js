@@ -6,18 +6,25 @@ import path from 'path';
 import mongoose from 'mongoose'; // Importa mongoose para la conexión
 import productsRouter from './routes/products.router.js';
 import cartsRouter from './routes/carts.router.js';
+import UserModel from "./models/UserModel.js";
+import cookieParser from "cookie-parser";
+import passport from "./config/passport.js";
+import sessionRouter from "./routes/session.routes.js";
+import authRoutes from "./routes/authroutes.js";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
 // Conexión a MongoDB
-mongoose.connect('mongodb://localhost:27017/ecommerce', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('Conectado a MongoDB'))
-.catch(err => console.log('Error al conectar a MongoDB:', err));
+mongoose
+  .connect(process.env.MONGO_URI || "mongodb://localhost:27017/ecommerce")
+  .then(() => console.log("🟢 Conectado a MongoDB"))
+  .catch((err) => console.error("🔴 Error al conectar a MongoDB:", err));
 
 // Inicialización de productos (puedes conectarlo con tu ProductManager más adelante)
 let products = [];
@@ -33,11 +40,15 @@ app.set('views', path.join(__dirname, 'src', 'views'));
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/static', express.static(path.join(__dirname, 'public'))); // Archivos estáticos
+app.use('/static', express.static(path.join(__dirname, 'public'))); 
+app.use(cookieParser());
+app.use(passport.initialize());
 
 // Routers
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
+app.use("/api/auth", authRoutes);
+app.use("/api/sessions", sessionRouter);
 
 // Ruta para vistas
 app.get('/products', (req, res) => {
@@ -72,7 +83,7 @@ io.on('connection', (socket) => {
 });
 
 // Iniciar servidor
-const PORT = 8080;
+const PORT = 9090;
 httpServer.listen(PORT, () => {
     console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });
